@@ -6,11 +6,14 @@
  * 4. Prompt player to enter rock paper or scissors
  * 5. If player choice beats computer selection
  *     Print message "You win!"
+ *     Add 1 to player score
  * 6. If computer selection beats player choice
  *     Print message "You lose!"
+ *     Add 1 to computer score
  * 7. if number of rounds is less than 5
  *     Start another round
  * 8. If number of rounds is greater than or equal to 5
+ *     Print the winner
  *     End game
  */
 
@@ -31,35 +34,67 @@ function getComputerChoice() {
 
 // Single round
 function playRound(playerSelection, computerSelection) {
-    if (playerSelection === computerSelection) {
+    if (playerSelection.toLowerCase() === computerSelection) {
         return "Its a tie!"
     }
     else if (playerSelection.toLowerCase() === "rock") {
         if (computerSelection === "scissors") {
-            return "You win! Rock beats Scissors";
+            return "win"
         }
         else {
-            return "You lose! Paper beats Rock";
+            return "lose"
         }
     }
     else if (playerSelection.toLowerCase() === "scissors") {
         if (computerSelection === "paper") {
-            return "You win! Scissors beats paper";
+            return "win"
         }
         else {
-            return "You lose! Rock beats Scissors";
+            return "lose"
         }
     }
     else if (playerSelection.toLowerCase() === "paper") {
         if (computerSelection === "rock") {
-            return "You win! Paper beats Rock";
+            return "win"
         }
         else {
-            return "You lose! Scissors beats paper";
+            return "lose"
         }
     }
 }
 
-const playerSelection = "rock";
-const computerSelection = getComputerChoice();
-console.log(playRound(playerSelection, computerSelection))
+// Main game loop
+function game() {
+    let playerScore = 0;
+    let computerScore = 0;
+    
+    for (let i = 0; i < 5; i++) {
+        let playerSelection = window.prompt("Choose rock, paper, or scissors");
+        let computerSelection = getComputerChoice();
+        let result = playRound(playerSelection, computerSelection);
+        
+        if (result === "win") {
+            playerScore++;
+            console.log(`You win! ${playerSelection} beats ${computerSelection}`);
+        }
+        else if (result === "lose") {
+            computerScore++;
+            console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
+        }
+        else {
+            console.log("Its a tie!")
+        }
+    }
+
+    if (playerScore > computerScore) {
+        console.log("You win!");
+    }
+    else if (playerScore < computerScore) {
+        console.log("You lose!");
+    }
+    else {
+        console.log("Draw!")
+    }
+}
+
+game();
