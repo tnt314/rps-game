@@ -19,82 +19,92 @@
 
 // Radomly select rock paper or scissors
 function getComputerChoice() {
-    let n = Math.floor(Math.random() * 3);
-    
-    if (n === 0) {
-        return "rock";
-    }
-    else if (n === 1) {
-        return "scissors";
-    }
-    else if (n === 2) {
-        return "paper";
-    }
+  let n = Math.floor(Math.random() * 3);
+
+  if (n === 0) {
+    return "rock";
+  } else if (n === 1) {
+    return "scissors";
+  } else if (n === 2) {
+    return "paper";
+  }
 }
 
 // Single round
 function playRound(playerSelection, computerSelection) {
-    if (playerSelection.toLowerCase() === computerSelection) {
-        return "Its a tie!"
+  if (playerSelection.toLowerCase() === computerSelection) {
+    return "Its a tie!";
+  } else if (playerSelection.toLowerCase() === "rock") {
+    if (computerSelection === "scissors") {
+      return "win";
+    } else {
+      return "lose";
     }
-    else if (playerSelection.toLowerCase() === "rock") {
-        if (computerSelection === "scissors") {
-            return "win"
-        }
-        else {
-            return "lose"
-        }
+  } else if (playerSelection.toLowerCase() === "scissors") {
+    if (computerSelection === "paper") {
+      return "win";
+    } else {
+      return "lose";
     }
-    else if (playerSelection.toLowerCase() === "scissors") {
-        if (computerSelection === "paper") {
-            return "win"
-        }
-        else {
-            return "lose"
-        }
+  } else if (playerSelection.toLowerCase() === "paper") {
+    if (computerSelection === "rock") {
+      return "win";
+    } else {
+      return "lose";
     }
-    else if (playerSelection.toLowerCase() === "paper") {
-        if (computerSelection === "rock") {
-            return "win"
-        }
-        else {
-            return "lose"
-        }
-    }
+  }
+}
+
+const body = document.querySelector("body");
+const div = document.createElement("div");
+const player = document.createElement("p");
+const computer = document.createElement("p");
+const results = document.createElement("p");
+
+div.appendChild(player);
+div.appendChild(computer);
+div.appendChild(results);
+body.appendChild(div);
+
+function gameOver(buttons) {
+  buttons.forEach((button) => {
+    button.disabled = !button.disabled;
+  });
 }
 
 // Main game loop
 function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = window.prompt("Choose rock, paper, or scissors");
-        let computerSelection = getComputerChoice();
-        let result = playRound(playerSelection, computerSelection);
-        
-        if (result === "win") {
-            playerScore++;
-            console.log(`You win! ${playerSelection} beats ${computerSelection}`);
-        }
-        else if (result === "lose") {
-            computerScore++;
-            console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
-        }
-        else {
-            console.log("Its a tie!")
-        }
-    }
+  let playerScore = 0;
+  let computerScore = 0;
+  const buttons = document.querySelectorAll("button");
 
-    if (playerScore > computerScore) {
-        console.log("You win!");
-    }
-    else if (playerScore < computerScore) {
-        console.log("You lose!");
-    }
-    else {
-        console.log("Draw!")
-    }
+  buttons.forEach((button) =>
+    button.addEventListener("click", function (e) {
+      let playerSelection = e.target.className;
+      let computerSelection = getComputerChoice();
+      let result = playRound(playerSelection, computerSelection);
+
+      if (result === "win") {
+        playerScore++;
+        player.textContent = `Player Score: ${playerScore}`;
+        results.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
+      } else if (result === "lose") {
+        computerScore++;
+        computer.textContent = `Computer Score: ${computerScore}`;
+        results.textContent = `You lose! ${computerSelection} beats ${playerSelection}`;
+      } else {
+        results.textContent = "Its a tie!";
+      }
+
+      if (playerScore >= 5) {
+        results.textContent = "Game over! You won!";
+        gameOver(buttons);
+      } else if (computerScore >= 5) {
+        results.textContent = "Game over! You lost!";
+        gameOver(buttons);
+      }
+    })
+  );
 }
 
 game();
